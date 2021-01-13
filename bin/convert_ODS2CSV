@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Convert the data sheet of "MiniTomatos.ods" into single CSV files
+
+# Using *.csv as file extention does not work because teh export filter does not 
+# recognise the options.
+
+NAME=$(basename "$1" ".ods" )
+
+rm ${NAME}-*.csv
+
+ssconvert -S -O 'separator=, format=raw locale=C' "$1" "${NAME}-%n.txt"
+
+rename 's#txt#csv#' ${NAME}-*.txt

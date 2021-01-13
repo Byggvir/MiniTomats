@@ -1,0 +1,5 @@
+OId,type,shop,count,"target weight","real weight",precision_weight,precision_meter,CompleteBox,Remarks
+1,Dattel,Hit,40,500,288.5,1,0.01,0,"Only weight"
+2,Cherry,Aldi,59,500,490,1,0.01,1,"One tomato not  included in table"
+3,Cherry,Aldi,59,500,490,1,0.01,1,"weight, length, diameter "
+,,,,,,,,,","
