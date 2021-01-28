@@ -28,7 +28,7 @@ theme_set(theme_bw())  # pre-set the bw theme.
 
 plot_box  <- function ( box ) {
 
-df <- MT_Select ( SQL = paste('select * from Tomatoes where boxId =', box,';' ))
+df <- MT_Select ( SQL = paste('select * from Tomatoes where boxId >=', box,';' ))
 
 df$vol <- df$len * df$dia ^ 2 * pi
 df$l3 <- df$len ^ 3
@@ -93,7 +93,7 @@ ggsave(plot = gg, file = paste('../png/', MyScriptName, '-',box, '.png', sep='')
 }
 
 
-for ( b in 2:3 ) {
+for ( b in 2:2 ) {
   
   plot_box(b)
   

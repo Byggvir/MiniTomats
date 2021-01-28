@@ -35,7 +35,7 @@ ggsave(plot = blp, file = paste('../png/', MyScriptName,"-", box,  ".png", sep="
        , width = 29.7, height = 21, units = "cm", dpi = 150)
 }
 
-for ( b in 2:3 ) {
+for ( b in 2:4 ) {
   
   plot_box(b)
   

@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS Boxes (
   , INDEX (variant, producer, target_weight)
   );
 
-LOAD DATA LOCAL INFILE '/home/thomas/git/R/MiniTomatoes/data/data0.csv' 
+LOAD DATA LOCAL INFILE '/home/thomas/git/R/MiniTomatoes/data/MiniTomatoes-0.csv' 
     INTO TABLE Boxes 
     FIELDS TERMINATED BY ',' 
     IGNORE 1 ROWS;
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS Dattel (
   );
 
  
-LOAD DATA LOCAL INFILE '/home/thomas/git/R/MiniTomatoes/data/data1.csv' 
+LOAD DATA LOCAL INFILE '/home/thomas/git/R/MiniTomatoes/data/MiniTomatoes-1.csv' 
     INTO TABLE Dattel 
     FIELDS TERMINATED BY ',' 
     IGNORE 1 ROWS;
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS Tomatoes (
   , INDEX (boxid)
   );
 
-LOAD DATA LOCAL INFILE '/home/thomas/git/R/MiniTomatoes/data/data2.csv' 
+LOAD DATA LOCAL INFILE '/home/thomas/git/R/MiniTomatoes/data/MiniTomatoes-2.csv' 
     INTO TABLE Tomatoes 
     FIELDS TERMINATED BY ',' 
     IGNORE 1 ROWS;
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS Tomatoes2 (
   , INDEX (boxid)
   );
 
-LOAD DATA LOCAL INFILE '/home/thomas/git/R/MiniTomatoes/data/data3.csv' 
+LOAD DATA LOCAL INFILE '/home/thomas/git/R/MiniTomatoes/data/MiniTomatoes-3.csv' 
     INTO TABLE Tomatoes2 
     FIELDS TERMINATED BY ',' 
     IGNORE 1 ROWS;

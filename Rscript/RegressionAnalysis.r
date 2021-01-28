@@ -42,27 +42,27 @@ png(  paste('../png/', MyScriptName, '-', box, '.png',sep='' )
 )
 
 
-# Einlesen der Daten aus den aufbereiteten kummulierten Fällen des RKI
+# Einlesen der Messwerte eus der MariaDB
 
 df <- MT_Select ( SQL = paste('select * from Tomatoes where boxId =', box,';' ))
-df$vol <- df$len * (df$dia ^ 2) * pi / 3
-df$len3 <- sqrt(df$len*df$dia) ^ 3
+df$x <- df$len*df$dia^2
+df$y <- df$weight
 
-ra <- lm(df$weight ~ df$vol)
+ra <- lm(df$y ~ df$x)
 ci <- confint(ra, level = CI)
   
 a <- c(ci[1, 1], ra$coefficients[1] , ci[1, 2])
 b <- c(ci[2, 1], ra$coefficients[2] , ci[2, 2])
 
-xlim <- limbounds(df$vol,TRUE)
-ylim <- limbounds(df$weight,TRUE)
+xlim <- limbounds(df$x,TRUE)
+ylim <- limbounds(df$y,TRUE)
 
-plot( df$vol
-    , df$weight 
+plot( df$x
+    , df$y 
     , xlim = xlim
     , ylim = ylim
-    , xlab = 'Volume ~ l*d*&pi;/3'
-    , ylab = 'weight [mm³]'
+    , xlab = 'Volume ~ l*d^2'
+    , ylab = 'weight [g]'
      
 )
 
@@ -73,13 +73,18 @@ abline(ci[,1], col= "red")
 abline(ci[,2], col= "red")
 abline(ra$coefficients, col= "blue")
 
+abline(v=min(df$x), col= "orange")
+abline(v=max(df$x), col= "orange")
+abline(h=min(df$y), col= "orange")
+abline(h=max(df$y), col= "orange")
+
 copyright()
   
 dev.off()
 
 }
 
-for ( b in 2:3 ) {
+for ( b in 2:4 ) {
   
   plot_box(b)
   
