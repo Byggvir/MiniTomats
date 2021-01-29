@@ -26,9 +26,7 @@ library(gridExtra)
 
 theme_set(theme_bw())  # pre-set the bw theme.
 
-plot_box  <- function ( box ) {
-
-df <- MT_Select ( SQL = paste('select * from Tomatoes where boxId >=', box,';' ))
+plot_box  <- function ( df, box ) {
 
 df$vol <- df$len * df$dia ^ 2 * pi
 df$l3 <- df$len ^ 3
@@ -93,8 +91,11 @@ ggsave(plot = gg, file = paste('../png/', MyScriptName, '-',box, '.png', sep='')
 }
 
 
-for ( b in 2:2 ) {
+for ( box in 2:5 ) {
   
-  plot_box(b)
+  df <- MT_Select ( SQL = paste('select * from Tomatoes2 where boxId >=', box,';' ))
+  plot_box(df, box)
   
 }
+df <- MT_Select ( SQL = paste('select * from Tomatoes2;' ))
+plot_box(df, 0)

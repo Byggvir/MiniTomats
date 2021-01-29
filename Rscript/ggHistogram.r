@@ -23,10 +23,8 @@ library(viridis)
 library(hrbrthemes)
 
 
-plot_box  <- function ( box ) {
+plot_box  <- function ( df, box ) {
   
-df <- MT_Select ( SQL = paste('select * from Tomatoes where boxId =', box,';' ))
-
 blp <- ggplot(df, aes(x=weight)) + 
   geom_histogram(binwidth=1, color="black", fill="lightblue")
 
@@ -35,8 +33,12 @@ ggsave(plot = blp, file = paste('../png/', MyScriptName,"-", box,  ".png", sep="
        , width = 29.7, height = 21, units = "cm", dpi = 150)
 }
 
-for ( b in 2:4 ) {
+for ( box in 3:5 ) {
   
-  plot_box(b)
+  df <- MT_Select ( SQL = paste('select * from Tomatoes2 where boxId =', box,';' ))
+  plot_box(df, box)
   
 }
+
+df <- MT_Select ( SQL = paste('select * from Tomatoes2;' ))
+plot_box(df, 0)

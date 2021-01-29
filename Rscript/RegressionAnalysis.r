@@ -34,17 +34,13 @@ options(
 
 
 
-plot_box  <- function ( box ) {
+plot_box  <- function ( df , box) {
   
 png(  paste('../png/', MyScriptName, '-', box, '.png',sep='' )
       , width = 1920
       , height = 1080
 )
 
-
-# Einlesen der Messwerte eus der MariaDB
-
-df <- MT_Select ( SQL = paste('select * from Tomatoes where boxId =', box,';' ))
 df$x <- df$len*df$dia^2
 df$y <- df$weight
 
@@ -84,9 +80,16 @@ dev.off()
 
 }
 
-for ( b in 2:4 ) {
+for ( box in 3:5 ) {
   
-  plot_box(b)
+  # Einlesen der Messwerte aus der MariaDB
+  
+  df <- MT_Select ( SQL = paste('select * from Tomatoes2 where boxId =', box,';' ))  
+  plot_box(df, box)
   
 }
+
+df <- MT_Select ( SQL = paste('select * from Tomatoes2;' ))  
+plot_box(df,0)
+
 

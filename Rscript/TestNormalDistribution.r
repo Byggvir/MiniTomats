@@ -43,7 +43,7 @@ print(shapiro.test(df$weight))
 }
 
 
-for ( b in 3:4 ) {
+for ( b in 3:5 ) {
   
   plot_box(b)
   
