@@ -17,7 +17,7 @@ library(REST)
 require(data.table)
 
 
-setwd('/home/thomas/git/R/MiniTomatoes/Rscript')
+setwd('/home/thomas/git/R/MiniTomatoes/R')
 
 source("lib/copyright.r")
 source("lib/myfunctions.r")

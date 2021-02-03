@@ -1,5 +1,9 @@
-Rscript/SQL/setup.sql
-Rscript/SQL/MiniTomato.cnf
+# ignore local output
+png/*.png
+# ignore local secret files
+
+R/SQL/setup.sql
+R/SQL/MiniTomato.cnf
 # History files
 .Rhistory
 .Rapp.history

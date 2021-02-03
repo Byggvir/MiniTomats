@@ -8,7 +8,7 @@
 # E-Mail: thomas@arend-rhb.de
 #
 
-setwd('~/git/R/MiniTomatoes/Rscript')
+setwd('~/git/R/MiniTomatoes/R')
 
 options(scipen=999)  # turn-off scientific notation like 1e+48
 MyScriptName <- "ScatterPlot"

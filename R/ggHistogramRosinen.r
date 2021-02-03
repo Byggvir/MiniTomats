@@ -12,7 +12,7 @@ MyScriptName <-"ggHistogramRosinen"
 
 require(data.table)
 
-setwd("~/git/R/MiniTomatoes/Rscript")
+setwd("~/git/R/MiniTomatoes/R")
 
 source("lib/copyright.r")
 source("lib/myfunctions.r")
