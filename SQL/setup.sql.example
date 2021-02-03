@@ -11,7 +11,10 @@ DROP DATABASE IF EXISTS MiniTomatoes;
 CREATE DATABASE IF NOT EXISTS MiniTomatoes;
 
 DROP USER IF EXISTS MiniTomato;
-CREATE USER MiniTomato IDENTIFIED BY 'Cherry-Dattel';
+
+-- Replace password with your secret password 
+
+CREATE USER MiniTomato IDENTIFIED BY 'ReplaceWithYourSecretPassword';
 
 GRANT ALL PRIVILEGES ON MiniTomatoes.* TO 'MiniTomato'@'localhost' ;
 
