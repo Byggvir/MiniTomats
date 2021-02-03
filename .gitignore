@@ -1,9 +1,10 @@
 # ignore local output
 png/*.png
-# ignore local secret files
 
-R/SQL/setup.sql
-R/SQL/MiniTomato.cnf
+# ignore local secret files
+SQL/setup.sql
+SQL/MiniTomato.cnf
+
 # History files
 .Rhistory
 .Rapp.history
