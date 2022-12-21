@@ -1,27 +1,55 @@
 #!/usr/bin/env Rscript
 #
 #
-# Script: CherryTomatos.r
+# Script: Histogram.r
 #
-# Stand: 2020-10-21
+# Stand: 2022-12-21
 # (c) 2020 by Thomas Arend, Rheinbach
 # E-Mail: thomas@arend-rhb.de
 #
 
-MyScriptName <-"RegressionAnalysis"
-
-library(tidyverse)
-library(lubridate)
-library(REST)
+MyScriptName <-"Histogram"
 
 require(data.table)
+library(tidyverse)
+library(grid)
+library(gridExtra)
+library(gtable)
+library(lubridate)
+library(ggplot2)
+library(ggrepel)
+library(viridis)
+library(hrbrthemes)
+library(scales)
+library(ragg)
+
+if (rstudioapi::isAvailable()){
+  
+  # When called in RStudio
+  SD <- unlist(str_split(dirname(rstudioapi::getSourceEditorContext()$path),'/'))
+  
+} else {
+  
+  #  When called from command line 
+  SD = (function() return( if(length(sys.parents())==1) getwd() else dirname(sys.frame(1)$ofile) ))()
+  SD <- unlist(str_split(SD,'/'))
+  
+}
+
+WD <- paste(SD[1:(length(SD)-1)],collapse='/')
+setwd(WD)
+
+source("R/lib/copyright.r")
+source("R/lib/myfunctions.r")
+source("R/lib/sql.r")
 
 
-setwd('~/git/R/MiniTomatoes/R')
+# Output folder for PNG
 
-source("lib/copyright.r")
-source("lib/myfunctions.r")
-source("lib/sql.r")
+OUTDIR <-'png/'
+dir.create( OUTDIR, showWarnings = FALSE, recursive = FALSE, mode = "0777" )
+
+citation = paste( '© Thomas Arend 2022' )
 
 CI <- 0.95
 
@@ -31,7 +59,7 @@ options(
   ,   Outdec = "."
   ,   max.print = 3000
 )
-png(  paste('../png/', MyScriptName, '.png',sep='' )
+png(  paste(OUTDIR, MyScriptName, '.png',sep='' )
       , width = 1920
       , height = 1080
 )
@@ -40,7 +68,7 @@ par ( mfcol=c(2,2) )
 
 # Get Data from database
 
-data <- MT_Select()
+data <- RunSQL()
 
 plot(  table(data$weight)
      , type = 'h'

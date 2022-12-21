@@ -11,34 +11,161 @@
 MyScriptName <-"ggHistogram"
 
 require(data.table)
-
-setwd("~/git/R/MiniTomatoes/R")
-
-source("lib/copyright.r")
-source("lib/myfunctions.r")
-source("lib/sql.r")
-library(REST)
+library(tidyverse)
+library(grid)
+library(gridExtra)
+library(gtable)
+library(lubridate)
 library(ggplot2)
+library(ggrepel)
 library(viridis)
 library(hrbrthemes)
+library(scales)
+library(ragg)
 
-
-plot_box  <- function ( df, box ) {
+if (rstudioapi::isAvailable()){
   
-blp <- ggplot(df, aes(x=weight)) + 
-  geom_histogram(binwidth=1, color="black", fill="lightblue")
-
-ggsave(plot = blp, file = paste('../png/', MyScriptName,"-", box,  ".png", sep="")
-       , type = "cairo-png",  bg = "white"
-       , width = 29.7, height = 21, units = "cm", dpi = 150)
-}
-
-for ( box in 3:5 ) {
+  # When called in RStudio
+  SD <- unlist(str_split(dirname(rstudioapi::getSourceEditorContext()$path),'/'))
   
-  df <- MT_Select ( SQL = paste('select * from Tomatoes2 where boxId =', box,';' ))
-  plot_box(df, box)
+} else {
+  
+  #  When called from command line 
+  SD = (function() return( if(length(sys.parents())==1) getwd() else dirname(sys.frame(1)$ofile) ))()
+  SD <- unlist(str_split(SD,'/'))
   
 }
 
-df <- MT_Select ( SQL = paste('select * from Tomatoes2;' ))
-plot_box(df, 0)
+WD <- paste(SD[1:(length(SD)-1)],collapse='/')
+setwd(WD)
+
+source("R/lib/sql.r")
+
+# Output folder for SVG
+
+OUTDIR <-'png/'
+dir.create( OUTDIR, showWarnings = FALSE, recursive = FALSE, mode = "0777" )
+
+citation = paste( '© Thomas Arend 2022' )
+
+
+plot_box  <- function ( df ) {
+
+  
+  df %>% ggplot( aes( x = weight ) ) + 
+    geom_histogram( binwidth = 1 , color = "black", fill = "lightblue") +
+    geom_text( stat = 'bin', binwidth = 1, aes ( label = after_stat(count) ), vjust = 0 ) +
+    scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+    scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+    theme_ipsum () +
+    theme(  legend.position="right"
+#            , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
+            ) +
+    labs(  title = paste( 'Minitomaten' )
+           , subtitle = paste( 'Gewichtsverteilung' )
+           , x = "Gewicht [g]"
+           , y = "Anzahl"
+           , colour = 'Legende'
+           , caption = citation
+    )  -> blp 
+  
+
+  ggsave( plot = blp
+          , file = paste( OUTDIR, MyScriptName,"-Gewicht.png", sep="")
+          ,  bg = "white"
+          , width = 1920
+          , height = 1080
+          , units = "px"
+          , dpi = 144 )
+
+  blp <- blp + facet_wrap(vars(Box))
+
+  ggsave( plot = blp
+          , file = paste( OUTDIR, MyScriptName,"-Gewicht-Eimer.png", sep="")
+          ,  bg = "white"
+            , width = 1920
+          , height = 1080
+          , units = "px"
+          , dpi = 144 )
+
+  df %>% ggplot( aes( x = len ) ) + 
+    geom_histogram( binwidth = 0.1 , color = "black", fill = "lightblue") +
+    geom_text( stat = 'bin', binwidth = 0.1, aes ( label = after_stat(count) ), vjust = 0 ) +
+    scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+    scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+    theme_ipsum () +
+    theme(  legend.position="right"
+            #            , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
+    ) +
+    labs(  title = paste( 'Minitomaten' )
+           , subtitle = paste( 'Längenverteilung' )
+           , x = "Länge [mm]"
+           , y = "Anzahl"
+           , colour = 'Legende'
+           , caption = citation
+    )  -> blp 
+  
+  
+  ggsave( plot = blp
+          , file = paste( OUTDIR, MyScriptName,"-Laenge.png", sep="")
+          ,  bg = "white"
+            , width = 1920
+          , height = 1080
+          , units = "px"
+          , dpi = 144 )
+  
+  blp <- blp + facet_wrap(vars(Box))
+  
+  ggsave( plot = blp
+          , file = paste( OUTDIR, MyScriptName,"-Laenge-Eimer.png", sep="")
+          ,  bg = "white"
+            , width = 1920
+          , height = 1080
+          , units = "px"
+          , dpi = 144 )
+
+  df %>% ggplot( aes( x = dia ) ) + 
+    geom_histogram( binwidth = 0.1 , color = "black", fill = "lightblue") +
+    geom_text( stat = 'bin', binwidth = 0.1, aes ( label = after_stat(count) ), vjust = 0 ) +
+    scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+    scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+    theme_ipsum () +
+    theme(  legend.position="right"
+            #            , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
+    ) +
+    labs(  title = paste( 'Minitomaten' )
+           , subtitle = paste( 'Verteilung des Durchmessers' )
+           , x = "Durchmesser [mm]"
+           , y = "Anzahl"
+           , colour = 'Legende'
+           , caption = citation
+    )  -> blp 
+  
+  
+  ggsave( plot = blp
+          , file = paste( OUTDIR, MyScriptName,"-Durchmesser.png", sep="")
+          ,  bg = "white"
+            , width = 1920
+          , height = 1080
+          , units = "px"
+          , dpi = 144 )
+  
+  blp <- blp + facet_wrap(vars(Box))
+  
+  ggsave( plot = blp
+          , file = paste( OUTDIR, MyScriptName,"-Durchmesser-Eimer.png", sep="")
+          ,  bg = "white"
+            , width = 1920
+          , height = 1080
+          , units = "px"
+          , dpi = 144 )
+  
+}
+
+SQL <- 'select * from Tomatoes2;'
+
+df <- RunSQL ( SQL =  SQL)
+df$Box <- factor(df$boxId, levels = unique(df$boxId),  labels = paste( 'Eimer', unique(df$boxId) - 2) )
+
+plot_box(df)
+

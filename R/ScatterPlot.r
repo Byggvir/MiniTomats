@@ -30,6 +30,7 @@ plot_box  <- function ( df, box ) {
 
 df$vol <- df$len * df$dia ^ 2 * pi
 df$l3 <- df$len ^ 3
+df$d2 <- df$dia ^ 2
 
 # Scatterplot
 
@@ -37,7 +38,7 @@ df$l3 <- df$len ^ 3
 p1 <- ggplot(df, aes(x=as.numeric(vol), y=as.numeric(weight))) + 
   geom_point( ) + 
   geom_smooth(method="lm", se=TRUE) + 
-  labs(subtitle="Weight ~ Volume", 
+  labs(subtitle="Weight ~ Volume ~= len * dia²", 
        x="Volume [mm³]",
        y="Weigth [g]", 
        title="Cherry Tomaten", 
@@ -73,14 +74,22 @@ p4 <- ggplot(df, aes(x=as.numeric(l3), y=as.numeric(weight))) +
 p5 <- ggplot(df, aes(x=as.numeric(len), y=as.numeric(dia))) + 
   geom_point( ) + 
   geom_smooth(method="lm", se=TRUE) + 
-  labs(subtitle="Diameter ~ Length³", 
-       x="Length [m]",
-       y="Diameter [m]", 
+  labs(subtitle="Diameter ~ Length", 
+       x="Length [mm]",
+       y="Diameter [mm]", 
        title="Cherry Tomaten", 
        caption = "Source: Thomas Arend")
 
+p6 <- ggplot(df, aes(x=as.numeric(d2), y=as.numeric(weight))) + 
+  geom_point( ) + 
+  geom_smooth(method="lm", se=TRUE) + 
+  labs(subtitle="Diameter ~ Length", 
+       x="Diameter² [mm²]", 
+       y="Weight [g]",
+       title="Cherry Tomaten", 
+       caption = "Source: Thomas Arend")
 
-gg <- grid.arrange(p1,p2,p3,p4,p5, ncol=2)
+gg <- grid.arrange(p1,p2,p3,p4,p5,p6, ncol=2)
 
 plot(gg)
 
@@ -91,7 +100,7 @@ ggsave(plot = gg, file = paste('../png/', MyScriptName, '-',box, '.png', sep='')
 }
 
 
-for ( box in 2:5 ) {
+for ( box in 2:6 ) {
   
   df <- MT_Select ( SQL = paste('select * from Tomatoes2 where boxId >=', box,';' ))
   plot_box(df, box)

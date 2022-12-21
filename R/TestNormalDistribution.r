@@ -26,9 +26,7 @@ library(gridExtra)
 
 theme_set(theme_bw())  # pre-set the bw theme.
 
-plot_box  <- function ( box ) {
-
-df <- MT_Select ( SQL = paste('select * from Tomatoes2 where boxId =', box,';' ))
+plot_box  <- function ( box , df ) {
 
 df$vol <- df$len * df$dia ^ 2 * pi
 df$l3 <- df$len ^ 3
@@ -43,8 +41,13 @@ print(shapiro.test(df$weight))
 }
 
 
-for ( b in 3:5 ) {
+for ( b in 3:6 ) {
   
-  plot_box(b)
+  df <- MT_Select ( SQL = paste('select * from Tomatoes2 where boxId =', b,';' ))
+  plot_box(b, df)
   
 }
+
+  df <- MT_Select ( SQL = paste('select * from Tomatoes2;' ))
+  plot_box(0, df)
+  

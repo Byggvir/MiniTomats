@@ -1,27 +1,57 @@
 #!usr/bin/env Rscript
 #
 #
-# Script: RKI_RegressionAnalysisKw.r
+# Script: RegressionAnalysis.r
 #
-# Stand: 2020-10-21
+# Stand: 2022-12-21
 # (c) 2020 by Thomas Arend, Rheinbach
 # E-Mail: thomas@arend-rhb.de
 #
 
 MyScriptName <-"RegressionAnalysis"
-
-library(tidyverse)
-library(lubridate)
-library(REST)
+MyScriptName <-"ggHistogram"
 
 require(data.table)
+library(tidyverse)
+library(grid)
+library(gridExtra)
+library(gtable)
+library(lubridate)
+library(ggplot2)
+library(ggrepel)
+library(viridis)
+library(hrbrthemes)
+library(scales)
+library(ragg)
 
+if (rstudioapi::isAvailable()){
+  
+  # When called in RStudio
+  SD <- unlist(str_split(dirname(rstudioapi::getSourceEditorContext()$path),'/'))
+  
+} else {
+  
+  #  When called from command line 
+  SD = (function() return( if(length(sys.parents())==1) getwd() else dirname(sys.frame(1)$ofile) ))()
+  SD <- unlist(str_split(SD,'/'))
+  
+}
 
-setwd('/home/thomas/git/R/MiniTomatoes/R')
+WD <- paste(SD[1:(length(SD)-1)],collapse='/')
+setwd(WD)
 
-source("lib/copyright.r")
-source("lib/myfunctions.r")
-source("lib/sql.r")
+source("R/lib/sql.r")
+
+# Output folder for PNG
+
+OUTDIR <-'png/'
+dir.create( OUTDIR, showWarnings = FALSE, recursive = FALSE, mode = "0777" )
+
+citation = paste( '© Thomas Arend 2022' )
+
+source("R/lib/copyright.r")
+source("R/lib/myfunctions.r")
+source("R/lib/sql.r")
 
 CI <- 0.95
 
@@ -36,7 +66,7 @@ options(
 
 plot_box  <- function ( df , box) {
   
-png(  paste('../png/', MyScriptName, '-', box, '.png',sep='' )
+png(  paste( OUTDIR, MyScriptName, '-', box, '.png',sep='' )
       , width = 1920
       , height = 1080
 )
@@ -84,12 +114,12 @@ for ( box in 3:5 ) {
   
   # Einlesen der Messwerte aus der MariaDB
   
-  df <- MT_Select ( SQL = paste('select * from Tomatoes2 where boxId =', box,';' ))  
+  df <- RunSQL ( SQL = paste('select * from Tomatoes2 where boxId =', box,';' ))  
   plot_box(df, box)
   
 }
 
-df <- MT_Select ( SQL = paste('select * from Tomatoes2;' ))  
+df <- RunSQL ( SQL = paste('select * from Tomatoes2;' ))  
 plot_box(df,0)
 
 
