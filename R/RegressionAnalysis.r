@@ -9,7 +9,6 @@
 #
 
 MyScriptName <-"RegressionAnalysis"
-MyScriptName <-"ggHistogram"
 
 require(data.table)
 library(tidyverse)
@@ -44,7 +43,7 @@ source("R/lib/sql.r")
 
 # Output folder for PNG
 
-OUTDIR <-'png/'
+OUTDIR <-'png/RA/'
 dir.create( OUTDIR, showWarnings = FALSE, recursive = FALSE, mode = "0777" )
 
 citation = paste( '© Thomas Arend 2022' )

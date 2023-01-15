@@ -43,10 +43,10 @@ source("R/lib/sql.r")
 
 # Output folder for SVG
 
-OUTDIR <-'png/'
+OUTDIR <-'png/Minitomatoes/'
 dir.create( OUTDIR, showWarnings = FALSE, recursive = FALSE, mode = "0777" )
 
-citation = paste( '© Thomas Arend 2022' )
+citation = paste( '© Thomas Arend 2022\nhttps://github.com/Byggvir/MiniTomatoes' )
 
 
 plot_box  <- function ( df ) {

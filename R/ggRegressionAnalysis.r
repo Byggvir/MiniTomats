@@ -46,7 +46,7 @@ source("R/lib/sql.r")
 OUTDIR <-'png/'
 dir.create( OUTDIR, showWarnings = FALSE, recursive = FALSE, mode = "0777" )
 
-citation = paste( '© Thomas Arend 2022' )
+citation = paste( '© Thomas Arend 2022\nhttps://github.com/Byggvir/MiniTomatoes' )
 
 CI <- 0.95
 

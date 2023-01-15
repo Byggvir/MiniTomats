@@ -8,7 +8,7 @@
 # E-Mail: thomas@arend-rhb.de
 #
 
-MyScriptName <-"ggHistogram"
+MyScriptName <-"ggHistogramEier"
 
 library(tidyverse)
 library(grid)
@@ -43,43 +43,28 @@ setwd(WD)
 source("R/lib/myfunctions.r")
 source("R/lib/sql.r")
 
-outdir <- 'png/Distribution/'
+outdir <- 'png/Eier/'
 dir.create( outdir , showWarnings = FALSE, recursive = TRUE, mode = "0777")
 
-w1 <- read.csv('../data/data1.csv', dec = '.', )
+df <- RunSQL ( SQL = paste('select * from Eier;' ))
 
-weight <-as.data.table(table(w1$weight))
-
-colnames(weight) <- c('Gewicht', 'Anzahl')
-
-# setorder(weight,Gewicht)
-
-gseq <- seq(1,max(weight[,2])+1)
-gcount <- rep(0,length(gseq))
-
-w <- data.frame(
-
-  Gewicht = gseq
-  , Anzahl = gcount
-)
-
-for (i in 1:nrow(weight)) {
-
-  w[as.numeric(weight[i,1]),2] <- weight[i,2]
-
-}
+blp <- df %>% ggplot( aes( x = weight, group = sizeclass ) ) + 
+  geom_histogram( aes( fill = sizeclass), binwidth = 1 ) +
+  labs(  title = paste('Eier', sep='')
+         , subtitle = paste ( 'Gewichte nach Größenklassen')
+         , x = "Gewicht [g]"
+         , y = "Anzahl" 
+         , colour = "Größenklasse"
+         , caption = citation ) +
+  theme_ipsum()
   
-blp <- ggplot( w, aes( x = Gewicht, y = Anzahl ) ) + 
-  geom_histogram(stat = "identity")
 
 ggsave( plot = blp
       , file = paste( outdir, MyScriptName,".png", sep="")
-      , device = "png"
+      , device = 'png'
       , bg = "white"
-      , width = 1020
+      , width = 1920
       , height = 1080
       , units = "px"
-      , dpi = 144
+      , dpi = 144 
 )
-
-print ( c(mean(w1[,2]), sd(w1[,2])))

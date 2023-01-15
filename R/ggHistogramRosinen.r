@@ -10,24 +10,52 @@
 
 MyScriptName <-"ggHistogramRosinen"
 
-require(data.table)
-
-setwd("~/git/R/MiniTomatoes/R")
-
-source("lib/copyright.r")
-source("lib/myfunctions.r")
-source("lib/sql.r")
-library(REST)
+library(tidyverse)
+library(grid)
+library(gridExtra)
+library(gtable)
+library(lubridate)
 library(ggplot2)
 library(viridis)
 library(hrbrthemes)
+library(scales)
+library(ragg)
 
+# Set Working directory to git root
 
-df <- MT_Select ( SQL = paste('select * from Rosinen;' ))
+if (rstudioapi::isAvailable()){
+  
+  # When executed in RStudio
+  SD <- unlist(str_split(dirname(rstudioapi::getSourceEditorContext()$path),'/'))
+  
+} else {
+  
+  #  When executi on command line 
+  SD = (function() return( if(length(sys.parents())==1) getwd() else dirname(sys.frame(1)$ofile) ))()
+  SD <- unlist(str_split(SD,'/'))
+  
+}
+
+WD <- paste(SD[1:(length(SD)-1)],collapse='/')
+
+setwd(WD)
+
+source("R/lib/myfunctions.r")
+source("R/lib/sql.r")
+
+outdir <- 'png/Rosinen/'
+dir.create( outdir , showWarnings = FALSE, recursive = TRUE, mode = "0777")
+
+df <- RunSQL ( SQL = paste('select * from Rosinen;' ))
 
 blp <- ggplot(df, aes(x=weight)) + 
   geom_histogram(binwidth=0.05, color="black", fill="lightblue")
 
-ggsave(plot = blp, file = paste('../png/', MyScriptName,"-", box,  ".png", sep="")
-       , type = "cairo-png",  bg = "white"
-       , width = 29.7, height = 21, units = "cm", dpi = 150)
+ggsave( plot = blp
+      , file = paste( outdir, MyScriptName,"-", box,  ".png", sep="")
+      , device = 'png'
+      , bg = "white"
+      , width = 1920
+      , height = 1080
+      , units = "px"
+      , dpi = 144)
