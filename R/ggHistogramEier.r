@@ -48,18 +48,20 @@ dir.create( outdir , showWarnings = FALSE, recursive = TRUE, mode = "0777")
 
 df <- RunSQL ( SQL = paste('select * from Eier;' ))
 
-blp <- df %>% ggplot( aes( x = weight, group = sizeclass ) ) + 
-  geom_histogram( aes( fill = sizeclass), binwidth = 1 ) +
+df %>% ggplot( aes( x = weight, group = sizeclass ) ) + 
+  geom_histogram( aes( fill = sizeclass)
+                  , color = 'black'
+                  , binwidth = 1 ) +
   labs(  title = paste('Eier', sep='')
          , subtitle = paste ( 'Gewichte nach Größenklassen')
          , x = "Gewicht [g]"
          , y = "Anzahl" 
          , colour = "Größenklasse"
          , caption = citation ) +
-  theme_ipsum()
+  theme_ipsum() -> PHist
   
 
-ggsave( plot = blp
+ggsave( plot = PHist
       , file = paste( outdir, MyScriptName,".png", sep="")
       , device = 'png'
       , bg = "white"

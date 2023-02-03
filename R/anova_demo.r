@@ -8,7 +8,7 @@
 # E-Mail: thomas@arend-rhb.de
 #
 
-MyScriptName <-"ggRegressionAnalysis"
+MyScriptName <-"anova_demo.r"
 
 require(data.table)
 library(tidyverse)
@@ -69,10 +69,12 @@ ci1 <- confint(ra1, level = CI)
 # print(ci1)
 
 ra2 <- lm(data = df, formula = weight ~ (len * dia ^ 2))
-ci2<- confint(ra2, level = CI)
+ci2 <- confint(ra2, level = CI)
 
 # print(ra2)
 # print(ci2)
 
-print(anova(ra1,ra2))
+a <- anova(ra1,ra2)
+
+print(a)
 

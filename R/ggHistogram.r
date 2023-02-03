@@ -87,11 +87,13 @@ plot_box  <- function ( df ) {
           , height = 1080
           , units = "px"
           , dpi = 144 )
-
+  
+  breaks_len <- round(min(df$len)):round(max(df$len))
+  
   df %>% ggplot( aes( x = len ) ) + 
-    geom_histogram( binwidth = 0.1 , color = "black", fill = "lightblue") +
-    geom_text( stat = 'bin', binwidth = 0.1, aes ( label = after_stat(count) ), vjust = 0 ) +
-    scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+    geom_histogram( binwidth = 1 , color = "black", fill = "lightblue") +
+    geom_text( stat = 'bin', binwidth = 1, aes ( label = after_stat(count) ), vjust = 0 ) +
+    scale_x_continuous( breaks = breaks_len, labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
     scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
     theme_ipsum () +
     theme(  legend.position="right"
@@ -124,10 +126,12 @@ plot_box  <- function ( df ) {
           , units = "px"
           , dpi = 144 )
 
+  breaks_dia <- round(min(df$dia)):round(max(df$dia))
+  
   df %>% ggplot( aes( x = dia ) ) + 
-    geom_histogram( binwidth = 0.1 , color = "black", fill = "lightblue") +
-    geom_text( stat = 'bin', binwidth = 0.1, aes ( label = after_stat(count) ), vjust = 0 ) +
-    scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+    geom_histogram( binwidth = 1 , color = "black", fill = "lightblue") +
+    geom_text( stat = 'bin', binwidth = 1, aes ( label = after_stat(count) ), vjust = 0 ) +
+    scale_x_continuous( breaks = breaks_dia, labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
     scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
     theme_ipsum () +
     theme(  legend.position="right"

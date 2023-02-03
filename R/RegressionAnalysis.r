@@ -109,7 +109,7 @@ dev.off()
 
 }
 
-for ( box in 3:5 ) {
+for ( box in 3:7 ) {
   
   # Einlesen der Messwerte aus der MariaDB
   
