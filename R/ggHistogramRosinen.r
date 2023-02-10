@@ -3,12 +3,12 @@
 #
 # Script: CherryTomatos.r
 #
-# Stand: 2020-10-21
-# (c) 2020 by Thomas Arend, Rheinbach
+# Stand: 2023-02-08
+# (c) 2023 by Thomas Arend, Rheinbach
 # E-Mail: thomas@arend-rhb.de
 #
 
-MyScriptName <-"ggHistogramRosinen"
+MyScriptName <- "ggHistogramRosinen"
 
 library(tidyverse)
 library(grid)
@@ -46,13 +46,15 @@ source("R/lib/sql.r")
 outdir <- 'png/Rosinen/'
 dir.create( outdir , showWarnings = FALSE, recursive = TRUE, mode = "0777")
 
+citation = paste( '© Thomas Arend 2022\nhttps://github.com/Byggvir/MiniTomatoes' )
+
 df <- RunSQL ( SQL = paste('select * from Rosinen;' ))
 
 blp <- ggplot(df, aes(x=weight)) + 
   geom_histogram(binwidth=0.05, color="black", fill="lightblue")
 
 ggsave( plot = blp
-      , file = paste( outdir, MyScriptName,"-", box,  ".png", sep="")
+      , file = paste( outdir, MyScriptName, ".png", sep="")
       , device = 'png'
       , bg = "white"
       , width = 1920

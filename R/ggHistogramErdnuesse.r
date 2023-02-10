@@ -8,7 +8,7 @@
 # E-Mail: thomas@arend-rhb.de
 #
 
-MyScriptName <-"ggHistogramEier"
+MyScriptName <-"ggHistogramErdnuesse"
 
 library(tidyverse)
 library(grid)
@@ -43,22 +43,25 @@ setwd(WD)
 source("R/lib/myfunctions.r")
 source("R/lib/sql.r")
 
-outdir <- 'png/Eier/'
+outdir <- 'png/Erdnuesse/'
 dir.create( outdir , showWarnings = FALSE, recursive = TRUE, mode = "0777")
 
-citation = paste( '© Thomas Arend 2022\nhttps://github.com/Byggvir/MiniTomatoes' )
+citation = paste( '© Thomas Arend 2023\nhttps://github.com/Byggvir/MiniTomatoes' )
 
-sc <- RunSQL( SQL = 'select distinct sizeclass from Eier;')
-df <- RunSQL( SQL = paste('select * from Eier;' ))
+df <- RunSQL( SQL = paste('select * from Erdnuesse where Makel = FALSE;' ))
 
-for ( s in sc$sizeclass) {
-  
-  df %>% filter ( sizeclass == s) %>% ggplot( aes( x = weight ) ) + 
+mg <- mean(df$weight)
+ng <- median(df$weight)
+sg <- sd(df$weight)
+
+bin_width <- ceiling(sg) / 5
+
+  df %>% ggplot( aes( x = weight ) ) + 
     geom_histogram( color = 'black'
                     , fill = 'cyan'
-                    , binwidth = 1 ) +
-    labs(  title = paste('Eier', sep='')
-           , subtitle = paste ( 'Gewichte der Größenklasse', s)
+                    , binwidth = bin_width ) +
+    labs(  title = paste('Erdnüsse', sep='')
+           , subtitle = paste ( 'Gewichtsverteilung der Erdnüsse in einer Tüte')
            , x = "Gewicht [g]"
            , y = "Anzahl" 
 
@@ -66,7 +69,7 @@ for ( s in sc$sizeclass) {
     theme_ipsum() -> PHist
 
   ggsave( plot = PHist
-        , file = paste( outdir, MyScriptName,"-", s, '.png', sep="")
+        , file = paste( outdir, MyScriptName, '.png', sep="")
         , device = 'png'
         , bg = "white"
         , width = 1920
@@ -75,6 +78,7 @@ for ( s in sc$sizeclass) {
         , dpi = 144 
   )
   
-  print(shapiro.test( ( df %>% filter( sizeclass == s ) )$weight ) )
-
-}
+  print(round(c(mg,ng,sg),2))
+  
+  print( shapiro.test( df$weight ) )
+  print( t.test( df$weight, mu=400/170 ) )
