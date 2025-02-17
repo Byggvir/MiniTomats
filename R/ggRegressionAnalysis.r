@@ -23,27 +23,31 @@ library(hrbrthemes)
 library(scales)
 library(ragg)
 
-if (rstudioapi::isAvailable()){
+
+# Set Working directory to git root
+
+if ( rstudioapi::isAvailable() ){
   
-  # When called in RStudio
-  SD <- unlist(str_split(dirname(rstudioapi::getSourceEditorContext()$path),'/'))
+  # When executed in RStudio
+  SD <- unlist( str_split( dirname( rstudioapi::getSourceEditorContext()$path), '/') )
   
 } else {
   
-  #  When called from command line 
-  SD = (function() return( if(length(sys.parents())==1) getwd() else dirname(sys.frame(1)$ofile) ))()
-  SD <- unlist(str_split(SD,'/'))
+  #  When executed on command line 
+  SD = (function() return( if( length( sys.parents() ) == 1 ) getwd() else dirname( sys.frame(1)$ofile ) ) )()
+  SD <- unlist( str_split( SD, '/' ) )
   
 }
 
-WD <- paste(SD[1:(length(SD)-1)],collapse='/')
-setwd(WD)
+WD <- paste( SD[ 1:(length(SD)-1) ], collapse='/' )
+
+setwd( WD )
 
 source("R/lib/sql.r")
 
 # Output folder for PNG
 
-OUTDIR <-'png/'
+OUTDIR <-'png/Minitomatoes/'
 dir.create( OUTDIR, showWarnings = FALSE, recursive = FALSE, mode = "0777" )
 
 citation = paste( '© Thomas Arend 2022\nhttps://github.com/Byggvir/MiniTomatoes' )
@@ -85,7 +89,7 @@ plot_box  <- function ( df) {
        ) +
        labs(  title = paste( 'Minitomaten' )
               , subtitle = paste( 'Gewicht in Abhänigkeit von Länge * Durchmesser zum Quadrat' )
-              , x = "Volume Quader l * d² [mm³]"
+              , x = "Volumen Quader l * d² [mm³]"
               , y = "Gewicht [g]"
               , colour = 'Legende'
               , caption = citation

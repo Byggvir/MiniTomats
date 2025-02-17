@@ -4,11 +4,11 @@ library(data.table)
 
 RunSQL <- function (
     SQL = 'select * from Tomatoes;'
-    , prepare="set @i := 1;") {
-  
-  rmariadb.settingsfile <- "/home/thomas/R/sql.conf.d/MiniTomatoes.conf"
-  
-  rmariadb.db <- "MiniTomatoes"
+    , prepare="set @i := 1;" 
+    , database = 'MiniTomatoes' ) {
+
+  rmariadb.settingsfile <- path.expand('~/R/sql.conf.d/MiniTomatoes.conf')
+  rmariadb.db <- database
   
   DB <- dbConnect(
     RMariaDB::MariaDB()
@@ -26,6 +26,30 @@ RunSQL <- function (
   
   dbDisconnect(DB)
   
-  return(dbRows)
+  return(as.data.table(dbRows))
 
+}
+
+ExecSQL <- function (
+    SQL  
+    , Database = 'MiniTomatoes'
+) {
+  
+  rmariadb.settingsfile <- path.expand('~/R/sql.conf.d/MiniTomatoes.conf')
+  
+  rmariadb.db <- database
+  
+  DB <- dbConnect(
+    RMariaDB::MariaDB()
+    , default.file=rmariadb.settingsfile
+    , group=rmariadb.db
+    , bigint="numeric"
+  )
+  
+  count <- dbExecute(DB, SQL)
+  
+  dbDisconnect(DB)
+  
+  return (count)
+  
 }

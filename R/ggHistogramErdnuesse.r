@@ -23,22 +23,22 @@ library(ragg)
 
 # Set Working directory to git root
 
-if (rstudioapi::isAvailable()){
+if ( rstudioapi::isAvailable() ){
   
   # When executed in RStudio
-  SD <- unlist(str_split(dirname(rstudioapi::getSourceEditorContext()$path),'/'))
+  SD <- unlist( str_split( dirname( rstudioapi::getSourceEditorContext()$path), '/') )
   
 } else {
   
-  #  When executi on command line 
-  SD = (function() return( if(length(sys.parents())==1) getwd() else dirname(sys.frame(1)$ofile) ))()
-  SD <- unlist(str_split(SD,'/'))
+  #  When executed on command line 
+  SD = (function() return( if( length( sys.parents() ) == 1 ) getwd() else dirname( sys.frame(1)$ofile ) ) )()
+  SD <- unlist( str_split( SD, '/' ) )
   
 }
 
-WD <- paste(SD[1:(length(SD)-1)],collapse='/')
+WD <- paste( SD[ 1:(length(SD)-1) ], collapse='/' )
 
-setwd(WD)
+setwd( WD )
 
 source("R/lib/myfunctions.r")
 source("R/lib/sql.r")
@@ -48,15 +48,15 @@ dir.create( outdir , showWarnings = FALSE, recursive = TRUE, mode = "0777")
 
 citation = paste( '© Thomas Arend 2023\nhttps://github.com/Byggvir/MiniTomatoes' )
 
-df <- RunSQL( SQL = paste('select * from Erdnuesse where Makel = FALSE;' ))
+peanuts <- RunSQL( SQL = paste('select * from Erdnuesse where Makel = FALSE;' ))
 
-mg <- mean(df$weight)
-ng <- median(df$weight)
-sg <- sd(df$weight)
+mg <- mean(peanuts$weight)
+ng <- median(peanuts$weight)
+sg <- sd(peanuts$weight)
 
 bin_width <- ceiling(sg) / 5
 
-  df %>% ggplot( aes( x = weight ) ) + 
+  peanuts %>% ggplot( aes( x = weight ) ) + 
     geom_histogram( color = 'black'
                     , fill = 'cyan'
                     , binwidth = bin_width ) +
@@ -78,7 +78,7 @@ bin_width <- ceiling(sg) / 5
         , dpi = 144 
   )
   
-  print(round(c(mg,ng,sg),2))
+  # print(round(c(mg,ng,sg),4))
   
-  print( shapiro.test( df$weight ) )
-  print( t.test( df$weight, mu=400/170 ) )
+  print( shapiro.test( peanuts$weight ) )
+  print( t.test( peanuts$weight, mu=400/170 ) )

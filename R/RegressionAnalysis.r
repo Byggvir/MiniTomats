@@ -23,21 +23,25 @@ library(hrbrthemes)
 library(scales)
 library(ragg)
 
-if (rstudioapi::isAvailable()){
+
+# Set Working directory to git root
+
+if ( rstudioapi::isAvailable() ){
   
-  # When called in RStudio
-  SD <- unlist(str_split(dirname(rstudioapi::getSourceEditorContext()$path),'/'))
+  # When executed in RStudio
+  SD <- unlist( str_split( dirname( rstudioapi::getSourceEditorContext()$path), '/') )
   
 } else {
   
-  #  When called from command line 
-  SD = (function() return( if(length(sys.parents())==1) getwd() else dirname(sys.frame(1)$ofile) ))()
-  SD <- unlist(str_split(SD,'/'))
+  #  When executed on command line 
+  SD = (function() return( if( length( sys.parents() ) == 1 ) getwd() else dirname( sys.frame(1)$ofile ) ) )()
+  SD <- unlist( str_split( SD, '/' ) )
   
 }
 
-WD <- paste(SD[1:(length(SD)-1)],collapse='/')
-setwd(WD)
+WD <- paste( SD[ 1:(length(SD)-1) ], collapse='/' )
+
+setwd( WD )
 
 source("R/lib/sql.r")
 

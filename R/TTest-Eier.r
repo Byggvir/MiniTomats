@@ -1,14 +1,24 @@
 #!/usr/bin/env Rscript
 #
 #
-# Script: CherryTomatos.r
+# Script: TTest-Eier.r
 #
-# Stand: 2020-10-21
-# (c) 2020 by Thomas Arend, Rheinbach
+# Stand: 2024-02-17
+# (c) 2020 - 2025 by Thomas Arend, Rheinbach
 # E-Mail: thomas@arend-rhb.de
 #
 
-MyScriptName <- "TTest-Eier.r"
+library(tidyverse)
+library(grid)
+library(gridExtra)
+library(gtable)
+library(lubridate)
+library(ggplot2)
+library(viridis)
+library(hrbrthemes)
+library(scales)
+library(ragg)
+library(nortest)
 
 # Set Working directory to git root
 
@@ -33,12 +43,30 @@ require(data.table)
 source("lib/myfunctions.r")
 source("lib/sql.r")
 
-tt <- ( 68 - mean(df$weight) ) / sd(df$weight)*sqrt( nrow(df) ) 
+w = RunSQL( SQL = paste('select * from Eierklassen where weightFrom > 0 and weightTo <= 73;', sep = '' ) )
 
-print(pt(tt,nrow(df)))
+for ( i in 1:nrow(w)) {
+  
+  print(w$classname[i])
+  
+  MEAN <- ( w$weightFrom[i] + w$weightTo[i] ) / 2
+  
+  eggs <- RunSQL ( SQL = paste('select * from Eier where sizeclass = "', w$sizeclass[i], '";' , sep = '')  )
+  
+  TT = t.test( eggs$weight, mu = MEAN, alternative = 'two.sided' ) 
+  
+  tt <- ( MEAN - mean(eggs$weight) ) / sd(eggs$weight)*sqrt( nrow(eggs) ) 
+  
+  print(pt(tt,nrow(eggs)-1))
+  
+  print(TT)
 
-df <- RunSQL ( SQL = paste('select * from Eier where sizeclass = "L";')  )
-T = t.test( df$weight, mu = ( 73 + 63 )/2, alternative = 'two.sided' ) 
+}
 
-print(T)
-
+i = 1
+for ( B in unique(eggs$boxId)) { 
+  TT = t.test ( (eggs %>% filter (boxId == B) )$weight, mu = 58 ) 
+  cat(i, B, TT$p.value, '\n')
+  i = i+1
+    
+}
